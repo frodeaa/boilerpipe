@@ -33,6 +33,7 @@ import org.apache.xerces.xni.parser.XMLConfigurationException;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLDocumentSource;
 import org.cyberneko.html.BoilerpipeHTMLElements.Element;
+import org.cyberneko.html.HTMLComponent;
 import org.cyberneko.html.filters.NamespaceBinder;
 import org.cyberneko.html.xercesbridge.XercesBridge;
 @SuppressWarnings("all")
@@ -67,9 +68,9 @@ import org.cyberneko.html.xercesbridge.XercesBridge;
  * @author Andy Clark
  * @author Marc Guillemot
  *
- * @version $Id: BilerpipeHTMLTagBalancer.java,v 1.20 2005/02/14 04:06:22 andyc Exp $
+ * @version $Id: BoilerpipeHTMLTagBalancer.java,v 1.20 2005/02/14 04:06:22 andyc Exp $
  */
-public class BilerpipeHTMLTagBalancer
+public class BoilerpipeHTMLTagBalancer
     implements XMLDocumentFilter, HTMLComponent {
 
     //
@@ -166,7 +167,7 @@ public class BilerpipeHTMLTagBalancer
     // static vars
 
     /** Synthesized event info item. */
-    protected static final HTMLEventInfo SYNTHESIZED_ITEM = 
+    protected static final HTMLEventInfo SYNTHESIZED_ITEM =
         new HTMLEventInfo.SynthesizedItem();
 
     //
@@ -1406,4 +1407,4 @@ public class BilerpipeHTMLTagBalancer
     		augs_ = (augs == null) ? null : new HTMLAugmentations(augs);
     	}
     }
-} // class BilerpipeHTMLTagBalancer
+} // class BoilerpipeHTMLTagBalancer

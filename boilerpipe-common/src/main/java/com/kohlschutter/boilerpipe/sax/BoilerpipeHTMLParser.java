@@ -22,7 +22,7 @@ import org.apache.xerces.parsers.AbstractSAXParser;
 import com.kohlschutter.boilerpipe.BoilerpipeDocumentSource;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
-import com.kohlschutter.boilerpipe.org.cyberneko.html.HTMLConfiguration;
+import org.cyberneko.html.BoilerpipeHTMLConfiguration;
 
 /**
  * A simple SAX Parser, used by {@link BoilerpipeSAXInput}. The parser uses <a
@@ -45,12 +45,12 @@ public class BoilerpipeHTMLParser extends AbstractSAXParser implements Boilerpip
    * @param contentHandler
    */
   public BoilerpipeHTMLParser(BoilerpipeHTMLContentHandler contentHandler) {
-    super(new HTMLConfiguration());
+    super(new BoilerpipeHTMLConfiguration());
     setContentHandler(contentHandler);
   }
 
   protected BoilerpipeHTMLParser(boolean ignore) {
-    super(new HTMLConfiguration());
+    super(new BoilerpipeHTMLConfiguration());
   }
 
   public void setContentHandler(final BoilerpipeHTMLContentHandler contentHandler) {
