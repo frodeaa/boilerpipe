@@ -34,7 +34,7 @@ public class UsingSAX {
     URL url;
     url =
         new URL(
-            "http://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
+            "https://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
 
     final InputSource is = HTMLFetcher.fetch(url).toInputSource();
 

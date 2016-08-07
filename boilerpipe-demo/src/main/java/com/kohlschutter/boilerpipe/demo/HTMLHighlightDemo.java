@@ -33,7 +33,7 @@ public class HTMLHighlightDemo {
   public static void main(String[] args) throws Exception {
     URL url =
         new URL(
-            "http://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
+            "https://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
 
     // choose from a set of useful BoilerpipeExtractors...
     final BoilerpipeExtractor extractor = CommonExtractors.ARTICLE_EXTRACTOR;
