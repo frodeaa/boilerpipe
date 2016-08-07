@@ -23,9 +23,9 @@ package org.cyberneko.html;
  * @author Ahmed Ashour
  * @author Marc Guillemot
  *
- * @version $Id: HTMLElements.java,v 1.12 2005/02/14 07:16:59 andyc Exp $
+ * @version $Id: BoilerpipeHTMLElements.java,v 1.12 2005/02/14 07:16:59 andyc Exp $
  */
-public class HTMLElements {
+public class BoilerpipeHTMLElements {
 
     //
     // Constants
@@ -791,4 +791,4 @@ public class HTMLElements {
 
     } // class Element
 
-} // class HTMLElements
+} // class BoilerpipeHTMLElements

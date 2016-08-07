@@ -32,7 +32,7 @@ import org.apache.xerces.xni.parser.XMLComponentManager;
 import org.apache.xerces.xni.parser.XMLConfigurationException;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLDocumentSource;
-import org.cyberneko.html.HTMLElements.Element;
+import org.cyberneko.html.BoilerpipeHTMLElements.Element;
 import org.cyberneko.html.filters.NamespaceBinder;
 import org.cyberneko.html.xercesbridge.XercesBridge;
 @SuppressWarnings("all")
@@ -62,14 +62,14 @@ import org.cyberneko.html.xercesbridge.XercesBridge;
  * <li>http://cyberneko.org/html/properties/balance-tags/current-stack
  * </ul>
  *
- * @see HTMLElements
+ * @see BoilerpipeHTMLElements
  *
  * @author Andy Clark
  * @author Marc Guillemot
  *
- * @version $Id: HTMLTagBalancer.java,v 1.20 2005/02/14 04:06:22 andyc Exp $
+ * @version $Id: BilerpipeHTMLTagBalancer.java,v 1.20 2005/02/14 04:06:22 andyc Exp $
  */
-public class HTMLTagBalancer
+public class BilerpipeHTMLTagBalancer
     implements XMLDocumentFilter, HTMLComponent {
 
     //
@@ -398,7 +398,7 @@ public class HTMLTagBalancer
         	fragmentContextStackSize_ = fragmentContextStack_.length;
         	for (int i=0; i<fragmentContextStack_.length; ++i) {
         		final QName name = fragmentContextStack_[i];
-            	final Element elt = HTMLElements.getElement(name.localpart);
+            	final Element elt = BoilerpipeHTMLElements.getElement(name.localpart);
             	fElementStack.push(new Info(elt, name));
         	}
         	
@@ -556,30 +556,30 @@ public class HTMLTagBalancer
         }
 
         // get element information
-        final HTMLElements.Element element = getElement(elem);
+        final BoilerpipeHTMLElements.Element element = getElement(elem);
         final short elementCode = element.code;
 
         // the creation of some elements like TABLE or SELECT can't be forced. Any others? 
-        if (isForcedCreation && (elementCode == HTMLElements.TABLE || elementCode == HTMLElements.SELECT)) {
+        if (isForcedCreation && (elementCode == BoilerpipeHTMLElements.TABLE || elementCode == BoilerpipeHTMLElements.SELECT)) {
         	return; // don't accept creation
         }
 
         // ignore multiple html, head, body elements
-		if (fSeenRootElement && elementCode == HTMLElements.HTML) {
+		if (fSeenRootElement && elementCode == BoilerpipeHTMLElements.HTML) {
         	notifyDiscardedStartElement(elem, attrs, augs);
             return;
         }
-        if (elementCode == HTMLElements.HEAD) {
+        if (elementCode == BoilerpipeHTMLElements.HEAD) {
             if (fSeenHeadElement) {
             	notifyDiscardedStartElement(elem, attrs, augs);
                 return;
             }
             fSeenHeadElement = true;
         }
-        else if (elementCode == HTMLElements.FRAMESET) {
+        else if (elementCode == BoilerpipeHTMLElements.FRAMESET) {
         	consumeBufferedEndElements(); // </head> (if any) has been buffered
         }
-        else if (elementCode == HTMLElements.BODY) {
+        else if (elementCode == BoilerpipeHTMLElements.BODY) {
     		// create <head></head> if none was present
     		if (!fSeenHeadElement) {
     			final QName head = createQName("head");
@@ -594,14 +594,14 @@ public class HTMLTagBalancer
             }
             fSeenBodyElement = true;
         }
-        else if (elementCode == HTMLElements.FORM) {
+        else if (elementCode == BoilerpipeHTMLElements.FORM) {
         	if (fOpenedForm) {
             	notifyDiscardedStartElement(elem, attrs, augs);
         		return;
         	}
         	fOpenedForm = true;
         }
-        else if (elementCode == HTMLElements.UNKNOWN) {
+        else if (elementCode == BoilerpipeHTMLElements.UNKNOWN) {
         	consumeBufferedEndElements();
         }
 
@@ -624,8 +624,8 @@ public class HTMLTagBalancer
                 }
             }
         	else {
-                HTMLElements.Element preferedParent = element.parent[0];
-                if (preferedParent.code != HTMLElements.HEAD || (!fSeenBodyElement && !fDocumentFragment)) {
+                BoilerpipeHTMLElements.Element preferedParent = element.parent[0];
+                if (preferedParent.code != BoilerpipeHTMLElements.HEAD || (!fSeenBodyElement && !fDocumentFragment)) {
                     int depth = getParentDepth(element.parent, element.bounds);
                     if (depth == -1) { // no parent found
                         final String pname = modifyName(preferedParent.name, fNamesElems);
@@ -666,8 +666,8 @@ public class HTMLTagBalancer
         // all elements close a <script>
         // in head, no element has children
         if ((fElementStack.top > 1 
-        		&& (fElementStack.peek().element.code == HTMLElements.SCRIPT))
-        		|| fElementStack.top > 2 && fElementStack.data[fElementStack.top-2].element.code == HTMLElements.HEAD) {
+        		&& (fElementStack.peek().element.code == BoilerpipeHTMLElements.SCRIPT))
+        		|| fElementStack.top > 2 && fElementStack.data[fElementStack.top-2].element.code == BoilerpipeHTMLElements.HEAD) {
             final Info info = fElementStack.pop();
             if (fDocumentHandler != null) {
                 callEndElement(info.qname, synthesizedAugs());
@@ -706,7 +706,7 @@ public class HTMLTagBalancer
         }
         // TODO: investigate if only table is special here
         // table closes all opened inline elements
-        else if (elementCode == HTMLElements.TABLE) {
+        else if (elementCode == BoilerpipeHTMLElements.TABLE) {
             for (int i=fElementStack.top-1; i >= 0; i--) {
                 final Info info = fElementStack.data[i];
                 if (!info.element.isInline()) {
@@ -743,7 +743,7 @@ public class HTMLTagBalancer
             forceStartElement(info.qname, info.attributes, synthesizedAugs());
         }
 
-        if (elementCode == HTMLElements.BODY) {
+        if (elementCode == BoilerpipeHTMLElements.BODY) {
         	lostText_.refeed(this);
         }
     } // startElement(QName,XMLAttributes,Augmentations)
@@ -772,8 +772,8 @@ public class HTMLTagBalancer
         throws XNIException {
     	startElement(element, attrs, augs);
         // browser ignore the closing indication for non empty tags like <form .../> but not for unknown element
-        final HTMLElements.Element elem = getElement(element);
-        if (elem.isEmpty() || elem.code == HTMLElements.UNKNOWN) {
+        final BoilerpipeHTMLElements.Element elem = getElement(element);
+        if (elem.isEmpty() || elem.code == BoilerpipeHTMLElements.UNKNOWN) {
         	endElement(element, augs);
         }
     } // emptyElement(QName,XMLAttributes,Augmentations)
@@ -795,8 +795,8 @@ public class HTMLTagBalancer
             boolean insertBody = !fSeenRootElement;
             if (!insertBody) {
                 Info info = fElementStack.peek();
-                if (info.element.code == HTMLElements.HEAD ||
-                    info.element.code == HTMLElements.HTML) {
+                if (info.element.code == BoilerpipeHTMLElements.HEAD ||
+                    info.element.code == BoilerpipeHTMLElements.HTML) {
                     String hname = modifyName("head", fNamesElems);
                     String bname = modifyName("body", fNamesElems);
                     if (fReportErrors) {
@@ -937,8 +937,8 @@ public class HTMLTagBalancer
             //       And here's some text.
             else if (!whitespace) {
                 Info info = fElementStack.peek();
-                if (info.element.code == HTMLElements.HEAD ||
-                    info.element.code == HTMLElements.HTML) {
+                if (info.element.code == BoilerpipeHTMLElements.HEAD ||
+                    info.element.code == BoilerpipeHTMLElements.HTML) {
                     String hname = modifyName("head", fNamesElems);
                     String bname = modifyName("body", fNamesElems);
                     if (fReportErrors) {
@@ -972,23 +972,23 @@ public class HTMLTagBalancer
         }
         
         // get element information
-        HTMLElements.Element elem = getElement(element);
+        BoilerpipeHTMLElements.Element elem = getElement(element);
 
         // if we consider outside content, just buffer </body> and </html> to consider them at the very end
         if (!fIgnoreOutsideContent &&
-            (elem.code == HTMLElements.BODY || elem.code == HTMLElements.HTML)) {
+            (elem.code == BoilerpipeHTMLElements.BODY || elem.code == BoilerpipeHTMLElements.HTML)) {
         	endElementsBuffer_.add(new ElementEntry(element, augs));
             return;
         }
 
         // check for end of document
-        if (elem.code == HTMLElements.HTML) {
+        if (elem.code == BoilerpipeHTMLElements.HTML) {
             fSeenRootElementEnd = true;
         }
-        else if (elem.code == HTMLElements.FORM) {
+        else if (elem.code == BoilerpipeHTMLElements.FORM) {
         	fOpenedForm = false;
         }
-        else if (elem.code == HTMLElements.HEAD && !forcedEndElement) {
+        else if (elem.code == BoilerpipeHTMLElements.HEAD && !forcedEndElement) {
         	// consume </head> first when <body> is reached to retrieve content lost between </head> and <body>
         	endElementsBuffer_.add(new ElementEntry(element, augs));
         	return;
@@ -998,7 +998,7 @@ public class HTMLTagBalancer
         // empty element
         int depth = getElementDepth(elem);
         if (depth == -1) {
-        	if (elem.code == HTMLElements.P) {
+        	if (elem.code == BoilerpipeHTMLElements.P) {
         		forceStartElement(element, emptyAttributes(), synthesizedAugs());
 	            endElement(element, augs);
         	}
@@ -1014,9 +1014,9 @@ public class HTMLTagBalancer
             fInlineStack.top = 0;
             for (int i = 0; i < depth - 1; i++) {
                 final Info info = fElementStack.data[size - i - 1];
-                final HTMLElements.Element pelem = info.element;
+                final BoilerpipeHTMLElements.Element pelem = info.element;
                 
-                if (pelem.isInline() || pelem.code == HTMLElements.FONT) { // TODO: investigate if only FONT
+                if (pelem.isInline() || pelem.code == BoilerpipeHTMLElements.FONT) { // TODO: investigate if only FONT
                     // NOTE: I don't have to make a copy of the info because
                     //       it will just be popped off of the element stack
                     //       as soon as we close it, anyway.
@@ -1113,7 +1113,7 @@ public class HTMLTagBalancer
     //
 
     /** Returns an HTML element. */
-    protected HTMLElements.Element getElement(final QName elementName) {
+    protected BoilerpipeHTMLElements.Element getElement(final QName elementName) {
     	String name = elementName.rawname;
         if (fNamespaces && NamespaceBinder.XHTML_1_0_URI.equals(elementName.uri)) {
             int index = name.indexOf(':');
@@ -1121,8 +1121,8 @@ public class HTMLTagBalancer
                 name = name.substring(index+1);
             }
         }
-        return HTMLElements.getElement(name);
-    } // getElement(String):HTMLElements.Element
+        return BoilerpipeHTMLElements.getElement(name);
+    } // getElement(String):BoilerpipeHTMLElements.Element
 
     /** Call document handler start element. */
     protected final void callStartElement(QName element, XMLAttributes attrs,
@@ -1143,7 +1143,7 @@ public class HTMLTagBalancer
      *
      * @param element The element.
      */
-    protected final int getElementDepth(HTMLElements.Element element) {
+    protected final int getElementDepth(BoilerpipeHTMLElements.Element element) {
         final boolean container = element.isContainer();
         int depth = -1;
         for (int i = fElementStack.top - 1; i >=fragmentContextStackSize_; i--) {
@@ -1157,7 +1157,7 @@ public class HTMLTagBalancer
             }
         }
         return depth;
-    } // getElementDepth(HTMLElements.Element)
+    } // getElementDepth(BoilerpipeHTMLElements.Element)
 
     /**
      * Returns the depth of the open tag associated with the specified
@@ -1165,7 +1165,7 @@ public class HTMLTagBalancer
      *
      * @param parents The parent elements.
      */
-    protected int getParentDepth(HTMLElements.Element[] parents, short bounds) {
+    protected int getParentDepth(BoilerpipeHTMLElements.Element[] parents, short bounds) {
         if (parents != null) {
             for (int i = fElementStack.top - 1; i >= 0; i--) {
                 Info info = fElementStack.data[i];
@@ -1180,7 +1180,7 @@ public class HTMLTagBalancer
             }
         }
         return -1;
-    } // getParentDepth(HTMLElements.Element[],short):int
+    } // getParentDepth(BoilerpipeHTMLElements.Element[],short):int
 
     /** Returns a set of empty attributes. */
     protected final XMLAttributes emptyAttributes() {
@@ -1255,7 +1255,7 @@ public class HTMLTagBalancer
         //
 
         /** The element. */
-        public HTMLElements.Element element;
+        public BoilerpipeHTMLElements.Element element;
 
         /** The element qualified name. */
         public QName qname;
@@ -1275,9 +1275,9 @@ public class HTMLTagBalancer
          *
          * @param element The element qualified name.
          */
-        public Info(HTMLElements.Element element, QName qname) {
+        public Info(BoilerpipeHTMLElements.Element element, QName qname) {
             this(element, qname, null);
-        } // <init>(HTMLElements.Element,QName)
+        } // <init>(BoilerpipeHTMLElements.Element,QName)
 
         /**
          * Creates an element information object.
@@ -1288,7 +1288,7 @@ public class HTMLTagBalancer
          * @param element The element qualified name.
          * @param attributes The element attributes.
          */
-        public Info(HTMLElements.Element element,
+        public Info(BoilerpipeHTMLElements.Element element,
                     QName qname, XMLAttributes attributes) {
             this.element = element;
             this.qname = new QName(qname);
@@ -1310,7 +1310,7 @@ public class HTMLTagBalancer
                     this.attributes = newattrs;
                 }
             }
-        } // <init>(HTMLElements.Element,QName,XMLAttributes)
+        } // <init>(BoilerpipeHTMLElements.Element,QName,XMLAttributes)
 
         /**
          * Simple representation to make debugging easier
@@ -1406,4 +1406,4 @@ public class HTMLTagBalancer
     		augs_ = (augs == null) ? null : new HTMLAugmentations(augs);
     	}
     }
-} // class HTMLTagBalancer
+} // class BilerpipeHTMLTagBalancer
